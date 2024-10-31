@@ -1,5 +1,10 @@
+from . import BaseModel
+from app.models.user import User
+from app.models.amenity import amenity
+
+
 class Place(BaseModel):
-    def __init__(self, title, description, price, latitude, longitude, owner):
+    def __init__(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User, amenities=None):
         super().__init__()
         self.title = title
         self.description = description

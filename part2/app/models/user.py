@@ -2,7 +2,7 @@ from . import BaseModel
 import re
 
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name: str, last_name: str, email: str, is_admin=False):
         super().__init__() # Llama al constructor de la super clase
         self.first_name = first_name
         self.last_name = last_name
