@@ -1,4 +1,4 @@
-from .import BaseModel
+from . import BaseModel
 import re
 
 class User(BaseModel):

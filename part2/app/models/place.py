@@ -9,6 +9,17 @@ class Place(BaseModel):
         self.owner = owner
         self.reviews = []  # List to store related reviews
         self.amenities = []  # List to store related amenities
+        self.validate()
+
+        def validate(self):
+        if len(self.title) > 100:
+            raise ValueError("Title cannot exceed 100 characters.")
+        if self.price <= 0:
+            raise ValueError("Price must be a poitive value.")
+        if not (-90.0 <= self.latitude <= 90.0):
+            raise ValueError("Latitude must be between -90 and 90.")
+        if not (-180.0 <= self.longitude <= 180.0):
+            raise ValueError("Longitude must be between -180 and 180.")
 
     def add_review(self, review):
         """Add a review to the place."""
