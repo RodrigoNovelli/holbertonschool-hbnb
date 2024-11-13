@@ -62,7 +62,7 @@ class UserResource(Resource):
         if not user:
             return {'error': 'User not found'}, 404
         existing_user = fecade.get_user_by_email(user_data['email'])
-        elif existing_user:
+        if existing_user:
             return {'error': 'Emil already exists'}, 400
         else:
             fecade.update_user(user_id, user_data)
