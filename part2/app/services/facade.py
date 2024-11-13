@@ -21,3 +21,20 @@ class HBnBFacade:
     def update_user(self, user_id, user_data): 
         update = self.user_repo.update(user_id, user_data)
         return update
+
+    def create_amenity(self, amenity_data):
+        amenity_name = amenity_data.get('name')
+        new_amenity = Amenity(amenity_name)
+        self.amenity_repo.add(new_amenity)
+        return new_amenity
+    
+    def get_amenity(self, amenity_id):
+        return self.amenity_repo.get(amenity_id)
+    
+    def get_all_amenities(self):
+    list_a = self.amenity_repo.get_all()
+    return list_a
+    
+    def update_amenity(self, amenity_id, amenity_data):
+    update_a = self.amenity_repo.update(amenity_id, amenity_data)
+    return update_a
