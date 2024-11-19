@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from app import create_app
 from app.services import facade
 from app.models.amenity import Amenity
