@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from . import BaseModel
 import re
 
@@ -13,11 +14,11 @@ class User(BaseModel):
 
         @property
         def first_name(self):
-        return self.first_name
+            return self.first_name
 
         @first_name.setter
         def first_name(self, string):
-            if len(sting) <= 50 and isinstance(string, str):
+            if len(string) <= 50 and isinstance(string, str):
                 self.first_name = string
             else:
                 raise ValueError('Name cannot exceed 50 characters')
@@ -35,7 +36,7 @@ class User(BaseModel):
         
         @property
         def email(self):
-            return selg.email
+            return self.email
         
         @email.setter
         def email(self, value):
@@ -52,8 +53,8 @@ class User(BaseModel):
                 raise ValueError("Invalid email") 
         
         def add_places(self, places):
-            self.places.append(place)
-            place.owner = self
+            self.places.append(places)
+            places.owner = self
         
         def get_user_list(self):
             return User.user_list

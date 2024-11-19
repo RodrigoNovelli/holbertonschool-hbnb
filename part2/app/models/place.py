@@ -1,9 +1,12 @@
+#!/usr/bin/python3
 from . import BaseModel
 from app.models.user import User
 from app.models.amenity import amenity
 
 
 class Place(BaseModel):
+    places = []
+
     def __init__(self, title: str, description: str, price: float, latitude: float, longitude: float, owner: User, amenities=None):
         super().__init__()
         self.title = title
@@ -13,18 +16,55 @@ class Place(BaseModel):
         self.longitude = longitude
         self.owner = owner
         self.reviews = []  # List to store related reviews
-        self.amenities = []  # List to store related amenities
+        if amenities is None:
+            self.amenities = []  # List to store related amenities
+        else:
+            self.amenities = amenities
         self.validate()
 
-        def validate(self):
-        if len(self.title) > 100:
-            raise ValueError("Title cannot exceed 100 characters.")
-        if self.price <= 0:
-            raise ValueError("Price must be a poitive value.")
-        if not (-90.0 <= self.latitude <= 90.0):
-            raise ValueError("Latitude must be between -90 and 90.")
-        if not (-180.0 <= self.longitude <= 180.0):
-            raise ValueError("Longitude must be between -180 and 180.")
+    @property
+    def title(self):
+        return self.title
+
+    @title.setter
+    def title (self, value):
+        if len(value) >= 100:
+            raise ValueError("Title is too long")
+        else:
+            self.title = value
+    
+    @property
+    def price(self):
+        return self.price
+    
+    @price.setter
+    def price (self, value):
+        if not isinstance (value, float):
+            raise ValueError("invalid type value")
+        else:
+            self.price = abs(value)
+    
+    @property
+    def latitude(self):
+        return self.latitude
+    
+    @latitude.setter
+    def latitude(self, value):
+        if value >= -90 and value <= 90:
+            self.latitude = value
+        else:
+            raise ValueError("latitude is out of range")
+    
+    @property
+    def longitude(self):
+        return self.longitude
+    
+    @longitude.setter
+    def longitude(self, value):
+        if value >= -180 and value <= 180:
+            self.longitude = value
+        else:
+            raise ValueError("longitude is out of range")
 
     def add_review(self, review):
         """Add a review to the place."""
@@ -33,3 +73,10 @@ class Place(BaseModel):
     def add_amenity(self, amenity):
         """Add an amenity to the place."""
         self.amenities.append(amenity)
+    
+    def get_amenities(self):
+        return self.amenities
+    
+    @classmethod
+    def add_place(cls, place):
+        cls.places.append(place)

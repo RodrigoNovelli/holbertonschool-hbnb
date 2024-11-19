@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
 
@@ -24,20 +25,16 @@ class UserList(Resource):
         if existing_user:
             return {'error': 'Email already registered'}, 400
         try:
-            new_user = fecade.create_user(user_data)
-            except ValueError as e:
-                return {"error": str(e)}, 400
-        
+            new_user = facade.create_user(user_data)
+        except ValueError as e:
+            return {"error": str(e)}, 400
         return {'id': new_user}, 201
-
-        @api.response(200, 'List of users retrieved successfully')
-        def get(self):
-            list_users = facade.list_users()
-            return [{'id': list.id, 'first_name': list.first_name, 'last_name': list.last_name, 'email': list.email}
-                    for list in list_users], 200
-
-        new_user = facade.create_user(user_data)
-        return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email}, 201
+    
+    @api.response(200, 'List of users retrieved successfully')
+    def get(self):
+        list_users = facade.list_users()
+        return [{'id': list.id, 'first_name': list.first_name, 'last_name': list.last_name, 'email': list.email}
+                for list in list_users], 200
 
 @api.route('/<user_id>')
 class UserResource(Resource):
@@ -58,12 +55,12 @@ class UserResource(Resource):
         #Obtenemos los datos del cuerpo solicitado
         user_data = api.payload
         #Se busca al usuario por su id en la base de datos
-        existing_user = fecade.get_user(user_id)
-        if not user:
+        existing_user = facade.get_user(user_id)
+        if not existing_user:
             return {'error': 'User not found'}, 404
-        existing_user = fecade.get_user_by_email(user_data['email'])
+        existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Emil already exists'}, 400
         else:
-            fecade.update_user(user_id, user_data)
+            facade.update_user(user_id, user_data)
             return "User updated", 200
