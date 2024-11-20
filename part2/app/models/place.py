@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from . import BaseModel
 from app.models.user import User
-from app.models.amenity import amenity
+from app.models.amenity import Amenity
 
 
 class Place(BaseModel):

@@ -58,3 +58,30 @@ class HBnBFacade:
     def update_place(self, place_id, place_data):
         updated_place = self.place_repo.update(place_id, place_data)
         return updated_place
+    
+    def create_review(self, review_data):
+        review = Review(**review_data)
+        self.review.add(review)
+        return review
+    
+    def get_review(self, review_id):
+        return self.review_repo.get(review_id)
+    
+    def get_all_reviews(self):
+        reviewlist = self.review_repo.get_all()
+        return reviewlist
+
+    def get_reviews_by_place(self, place_id):
+        reviews = self.get_all_reviews()
+        list = []
+        for review in reviews:
+            if review.place_id == place_id:
+                list.append(review)
+            return list
+
+    def update_review(self, review_id, review_data):
+        updatedreview = self.review_repo.update(review_id, review_data)
+        return updatedreview
+
+    def delete_review(self, review_id):
+        self.review_repo.delete(review_id)

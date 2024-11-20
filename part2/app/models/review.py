@@ -12,6 +12,13 @@ class Review (BaseModel):
         self.user = user
         self.validate()
     
-    def validate():
-        if not (1 <= self.raitig <= 5):
-            raise ValueError("Rating must be between 1 and 5")
+    @property
+    def rating(self):
+        return self.rating
+    
+    @rating.setter
+    def rating(self, value):
+        if self.value >= 1 and self.value <= 5:
+            self.rating = value
+        else:
+            raise ValueError ("Raiting must between 1 and 5")
