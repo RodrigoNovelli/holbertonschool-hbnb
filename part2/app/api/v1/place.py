@@ -38,7 +38,7 @@ class PlaceList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         place_data = api.payload
-        owner = facade.get_user(user_id)
+        owner = facade.get_user(user_model.id)
         if owner:
             place_data['owner'] = owner
         else:
