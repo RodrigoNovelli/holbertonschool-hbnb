@@ -30,6 +30,19 @@ place_model = api.model('Place', {
     'owner_id': fields.String(required=True, description='ID of the owner'),
     'amenities': fields.List(fields.String, required=True, description="List of amenities ID's")
 })
+review_model = api.model('Review', {
+    'text': fields.String(required=True, description='Text of the review'),
+    'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
+    'user_id': fields.String(required=True, description='ID of the user'),
+    'place_id': fields.String(required=True, description='ID of the place')
+})
+place_response_model = api.model ('PlaceResponse',
+    place_model.clone('Place Response', {
+        'owner': fields.Nested(user_model, description='Owner of the place'),
+        'amenities': fields.List(fields.Nested(amenity_model), description='Amenities that the place have'),
+        'reviews': fields.List(fields.Nested(review_model), description='List of reviews'),
+    })
+)
 
 @api.route('/')
 class PlaceList(Resource):
