@@ -32,7 +32,7 @@ class UserList(Resource):
             new_user = facade.create_user(user_data)
         except ValueError as e:
             return {"error": str(e)}, 400
-        return {'id': new_user}, 201
+        return {'id': new_user.id}, 201
     
     @api.response(200, 'List of users retrieved successfully')
     def get(self):
