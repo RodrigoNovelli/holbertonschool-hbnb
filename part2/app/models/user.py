@@ -3,6 +3,7 @@ from . import BaseModel
 import re
 
 class User(BaseModel):
+    user_list = []
     def __init__(self, first_name: str, last_name: str, email: str, is_admin=False):
         super().__init__() # Llama al constructor de la super clase
         self.first_name = first_name

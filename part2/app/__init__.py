@@ -15,16 +15,7 @@ def create_app(config_class="config.DevelopmentConfig"):
         version='1.0',
         title='HBnB API',
         description='HBnB Application API',
-        doc="/api/v1",
-        authorizations={
-            "apiKey": {
-                "type": "apiKey",
-                "in": "header",
-                "name": "Authorization"
-            }
-        },
-        security="apiKey"
-    )
+        doc="/api/v1",)
     # Register the users namespace
     api.add_namespace(users_ns, path='/api/v1/users')
     api.add_namespace(amenities_ns, path='/api/v1/amenities')
