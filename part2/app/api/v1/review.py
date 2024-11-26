@@ -19,7 +19,7 @@ class ReviewList(Resource):
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
-        review_data = api.playload
+        review_data = api.payload
         new_review = facade.create_review(review_data)
         return {
             'id': new_review.id,
@@ -60,7 +60,7 @@ class ReviewResource(Resource):
             'user_id': {'type': 'string'},
             'place_id': {'type': 'string'}
             }
-        review_data = api.playload
+        review_data = api.payload
         validate = Validate(scheme)
         review = fecade.get_place(review.id)
 

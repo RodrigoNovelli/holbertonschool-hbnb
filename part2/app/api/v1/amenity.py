@@ -54,7 +54,7 @@ class AmenityResource(Resource):
         """Update an amenity's information"""
         validate = {'name': {'type': 'string'}}
         val = Validator(validate)
-        amenity_data = api.playload
+        amenity_data = api.payload
         amenity = facade.get_amenity(amenity_id)
         if not amenity:
             return {'error': 'Amenity not found'}, 404
