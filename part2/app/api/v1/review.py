@@ -53,14 +53,24 @@ class ReviewResource(Resource):
     @api.response(400, 'Invalid input data')
     def put(self, review_id):
         """Update a review's information"""
-        secheme = {
-            'id': {'type': 'string'},
+        scheme = {
+            'id0': {'type': 'string'},
             'text': {'type': 'string'},
             'rating': {'type': 'int'},
             'user_id': {'type': 'string'},
             'place_id': {'type': 'string'}
             }
         review_data = api.playload
+        validate = Validate(scheme)
+        review = fecade.get_place(review.id)
+
+        if not review:
+            return {'error' ('Review not found')}, 404
+        if validate(review_data):
+            fecade.update_review(review_id, review_data)
+            return {'message': 'Review updated succesfully'}, 201
+        else:
+            return ('Invalid data'), 400
         
 
     @api.response(200, 'Review deleted successfully')
