@@ -31,10 +31,10 @@ class Place(BaseModel):
         return description
     
     @description.setter(self, string):
-        if isinstance(string, str):
-            self._description = string
-        else:
-            raise ValueError('Description must be a string')
+    if isinstance(string, str):
+        self._description = string
+    else:
+        raise ValueError('Description must be a string')
 
     @property
     def price(self):
