@@ -1,6 +1,6 @@
 from . import BaseModel
-from . import Amenity
-from . import User
+from . import amenity
+from . import user
 
 
 class Place(BaseModel):
@@ -28,9 +28,10 @@ class Place(BaseModel):
     
     @property
     def description(self):
-        return description
+        return self._description
     
-    @description.setter(self, string):
+    @description.setter
+    def description(self, string):
         if isinstance(string, str):
             self._description = string
         else:
@@ -53,7 +54,7 @@ class Place(BaseModel):
     
     @latitude.setter
     def latitude(self, num):
-        if num <= 90.0 and num <= -90.0 and isinstance(num, float):
+        if num <= 90.0 and num >= -90.0 and isinstance(num, float):
             self._latitude = num
         else:
             raise ValueError('Latitude must be between -90.0 and 90.0')
@@ -64,7 +65,7 @@ class Place(BaseModel):
     
     @longitude.setter
     def longitude(self, num):
-        if num <= -180.0 and num >= 180.0 and isinstance(num, float):
+        if num >= -180.0 and num <= 180.0 and isinstance(num, float):
             self._longitude = num
         else:
             raise ValueError('Longitude must be between -180.0 and 180.0')

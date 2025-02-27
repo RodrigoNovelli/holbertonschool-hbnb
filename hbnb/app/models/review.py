@@ -1,6 +1,6 @@
 from . import BaseModel
-from . import User
-from . import Place
+from . import user
+from . import place
 
 
 class Review(BaseModel):
@@ -15,7 +15,7 @@ class Review(BaseModel):
     def text(self):
         return self._text
     
-    @text.settter
+    @text.setter
     def text(self, string):
         if isinstance(string, str):
             self._text = string

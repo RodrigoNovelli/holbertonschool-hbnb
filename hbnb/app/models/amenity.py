@@ -12,7 +12,7 @@ class Amenity(BaseModel):
     
     @name.setter
     def name(self, string):
-        if len(string) <= 50 and isintance(string, str):
+        if len(string) <= 50 and isinstance(string, str):
             self._name = string
         else:
             raise ValueError('Name must be a string between 0 and 50 char')
