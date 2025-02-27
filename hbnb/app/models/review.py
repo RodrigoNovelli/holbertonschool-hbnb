@@ -13,23 +13,23 @@ class Review(BaseModel):
     
     @property
     def text(self):
-        return self.text
+        return self._text
     
     @text.settter
     def text(self, string):
         if isinstance(string, str):
-            self.text = string
+            self._text = string
         else:
             raise ValueError("Text must be a string")
     
     @property
     def rating(self):
-        return rating
+        return self._rating
     
     @rating.setter
     def rating(self, num):
         if num <= 5 and num >= 1 and isinstance(num, int):
-            self.rating = num
+            self._rating = num
         else:
             raise ValueError('Rating mus be a number between 1 and 5')
     
