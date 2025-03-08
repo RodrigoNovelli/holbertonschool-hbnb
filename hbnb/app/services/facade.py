@@ -1,7 +1,8 @@
 from app.persistence.repository import InMemoryRepository
 from app.api.v1 import users
 from app.models.user import User
-from app.models.amenity import Amenity 
+from app.models.amenity import Amenity
+from app.models.place import Place
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
@@ -34,3 +35,22 @@ class HBnBFacade:
     def update_amenity(self, amenity_id, amenity_data):
         updated_a = self.amenity_repo.update(amenity_id, amenity_data)
         return updated_a
+
+
+    def create_place(self, place_data):
+        place = Place(**place_data)
+        self.place_repo.add(place)
+        return place
+
+
+    def get_place(self, place_id):
+        return self.place_repo.get(place_id)
+
+
+    def get_all_places(self):
+        list_p = self.place_repo.get_all()
+        return list_p
+
+    def update_place(self, place_id, place_data):
+        update_p = self.place_repo.update(place_id, place_data)
+        return update_p
