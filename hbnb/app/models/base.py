@@ -17,3 +17,11 @@ class BaseModel:
             if hasattr(self, key):
                 setattr(self, key, value)
         self.save()  # Update the updated_at timestamp
+
+    def rating_validate(self, rating):
+        if isinstance(rating, int):
+            if rating < 1 or rating > 5:
+                raise ValueError("Invalid input data")
+            return True
+        else:
+            raise TypeError("Invalid input data")
