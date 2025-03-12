@@ -61,7 +61,7 @@ class PlaceList(Resource):
         else:
             return {'error': 'Owner not found'}, 404
 
-        list_amenities = [{}]
+        list_amenities = []  # Cambiado a lista vacía
         amenity_id_list = place_data.get('amenities')
         if not amenity_id_list:
             return {'error': 'Amenity not found'}, 404
@@ -83,20 +83,20 @@ class PlaceList(Resource):
                 'longitude': new_place.longitude,
                 'owner_id': new_place.owner.id,
                 'amenities': [
-                    {'id': amen.id, 'name': amen.name}
-                    for amen in new_place.amenities
+                    {'id': amenity.id, 'name': amenity.name}
+                    for amenity in list_amenities  # Usar list_amenities
                 ]
-                    }, 201
+            }, 201
             
         except ValueError as e:
             return {"error": str(e)}, 400
-        
+
 
     @api.response(200, 'List of places retrieved successfully', [place_response_model])
     def get(self):
         """Retrieve a list of all places"""
         list_places = facade.get_all_places()
-        return marshal(list_places, place_model), 200
+        return marshal(list_places, place_response_model), 200
 
 @api.route('/<place_id>')
 class PlaceResource(Resource):
