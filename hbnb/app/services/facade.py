@@ -4,6 +4,7 @@ from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
 from app.models.review import Review
+
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
@@ -27,9 +28,10 @@ class HBnBFacade:
         return self.user_repo.get_by_attribute('email', email)
     
     def create_amenity(self, amenity_data):
-        amenity = Amenity(**amenity_data)
-        self.amenity_repo.add(amenity)
-        return amenity
+        amenity_name = amenity_data.get('name')
+        new_amenity = Amenity(amenity_name)
+        self.amenity_repo.add(new_amenity)
+        return new_amenity
 
     def get_amenity(self, amenity_id):
         return self.amenity_repo.get(amenity_id)
@@ -47,37 +49,6 @@ class HBnBFacade:
         self.place_repo.add(place)
         return place
     
-    def create_review(self, review_data):
-        # We get user and place id related to the review
-        user_id = review_data.pop('user_id')
-        place_id = review_data.pop('place_id')
-
-        # Verify if User and Place exists
-        user_list = get_user(user_id)
-        r_user = None
-        for user in user_list:
-            if user.id == user_id:
-                r_user = user
-                break
-        places_list = Place.get_places()
-        r_place = None
-        for place in places_list:
-            if place.id == place_id:
-                r_place = place
-                break
-        # If doesn't exist raises ValueError
-        if r_user is None or r_place is None:
-            raise ValueError(f"User with id {user_id} or Place with id {place_id} not found")
-
-        # Preparing review package for instance initialization
-        review_data['user'] = r_user
-        review_data['place'] = r_place
-        new_review = Review(**review_data)
-        r_place.add_review(new_review)
-        self.review_repo.add(new_review)
-        return new_review
-
-
     def get_place(self, place_id):
         return self.place_repo.get(place_id)
 
@@ -92,7 +63,7 @@ class HBnBFacade:
     
     def create_review(self, review_data):
         review = Review(**review_data)
-        self.review.add(review)
+        self.review_repo.add(review)
         return review
     
     def get_review(self, review_id):
