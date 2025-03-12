@@ -19,7 +19,6 @@ class Review(BaseModel):
     def text(self, string):
         if isinstance(string, str):
             self._text = string
-            print("logrado")
         else:
             raise ValueError("Text must be a string")
     
@@ -31,7 +30,6 @@ class Review(BaseModel):
     def rating(self, num):
         if num <= 5 and num >= 1 and isinstance(num, int):
             self._rating = num
-            print("logrado2")
         else:
             raise ValueError('Rating mus be a number between 1 and 5')
     
