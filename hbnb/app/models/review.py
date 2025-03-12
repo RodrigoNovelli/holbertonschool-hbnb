@@ -4,7 +4,7 @@ from app.models.place import Place
 
 
 class Review(BaseModel):
-    def __init__(self, text, rating, place, user):
+    def __init__(self, text, rating, place, user_id, ):
         super().__init__()
         self.text = text
         self.rating = rating
