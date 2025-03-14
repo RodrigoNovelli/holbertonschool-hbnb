@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields, marshal
 from app.services import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('reviews', description='Review operations')
 
@@ -18,15 +19,25 @@ class ReviewList(Resource):
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
     def post(self):
+        current_user = get_jwt_identity()
         review_data = api.payload
-        new_review = facade.create_review(review_data)
-        return {
-            'id': new_review.id,
-            'text': new_review.text,
-            'rating': new_review.rating,
-            'user_id': new_review.user_id,
-            'place_id': new_review.place_id
-            }
+        place = facade.get_place(review_data['place_id'])
+        if current_user == place.owner_id:
+            return 'You cant review your own place'
+        else:
+            reviews = facade.get_reviews_by_place(review_data['place_id'])
+            if any(current_user for review.user_id in reviews):
+                return 'You have already reviewed this place'
+            else:
+                new_review = facade.create_review(review_data)
+                return {
+                    'id': new_review.id,
+                    'text': new_review.text,
+                    'rating': new_review.rating,
+                    'user_id': new_review.user_id,
+                    'place_id': new_review.place_id
+                    }
+                
         
     @api.response(201, 'List of reviews retrieved successfully')
     def get(self):

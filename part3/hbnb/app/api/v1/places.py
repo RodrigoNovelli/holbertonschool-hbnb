@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields, marshal
 from app.services import facade
 from app.models.user import User
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('places', description='Place operations')
 
@@ -126,6 +126,7 @@ class PlaceResource(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
         scheme = {
@@ -140,9 +141,13 @@ class PlaceResource(Resource):
         val = Validator(scheme)
         place_data = api.payload
         place = facade.get_place(place_id)
-        if not place:
-            return {'error': 'Place not found'}, 404
+        current_user = get_jwt_identity()
+        if current_user is not place.owner:
+            return "You are not the owner"
         else:
-            facade.update_place(place_id, place_data)
-            return {"message": "Place updated successfully"}, 200
+            if not place:
+                return {'error': 'Place not found'}, 404
+            else:
+                facade.update_place(place_id, place_data)
+                return {"message": "Place updated successfully"}, 200
         
