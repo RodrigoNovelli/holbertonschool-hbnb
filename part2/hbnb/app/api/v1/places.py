@@ -127,7 +127,6 @@ class PlaceResource(Resource):
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
     def put(self, place_id):
-        current_user = get_jwt_identity()
         """Update a place's information"""
         scheme = {
             'title': {'type': 'string'}, 
@@ -141,12 +140,9 @@ class PlaceResource(Resource):
         val = Validator(scheme)
         place_data = api.payload
         place = facade.get_place(place_id)
-        if place.owner_id != current_user['id']:
-            return {'error': 'Unauthorized action'}, 403
         if not place:
             return {'error': 'Place not found'}, 404
-        elif val.validate(place_data):
+        else:
             facade.update_place(place_id, place_data)
             return {"message": "Place updated successfully"}, 200
-        else:
-            return "Invalidate data", 400
+        
