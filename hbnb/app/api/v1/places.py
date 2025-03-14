@@ -1,7 +1,6 @@
 from flask_restx import Namespace, Resource, fields, marshal
 from app.services import facade
 from app.models.user import User
-from cerberus import Validator
 
 
 api = Namespace('places', description='Place operations')

@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 from flask_restx import Namespace, Resource, fields, marshal
 from app.services import facade
-from cerberus import Validator
 
 api = Namespace('reviews', description='Review operations')
 

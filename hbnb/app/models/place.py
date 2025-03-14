@@ -13,8 +13,11 @@ class Place(BaseModel):
         self.longitude = longitude
         self.owner_id = owner_id
         self.owner = owner
-        self.reviews = []  # List to store related reviews
-        self.amenities = []  # List to store related amenities
+        self.reviews = []
+        if amenities is None:# List to store related reviews
+            self.amenities = []  # List to store related amenities
+        else:
+            self.amenities = amenities
     
     @property
     def title(self):
