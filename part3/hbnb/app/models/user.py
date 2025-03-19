@@ -1,4 +1,5 @@
-from app import bcrypt
+
+from flask_bcrypt import Bcrypt
 from app.models.base import BaseModel
 import re
 

@@ -41,16 +41,16 @@ class AmenityResource(Resource):
         amenity_by_id = facade.get_amenity(amenity_id)
         return {'id': amenity_by_id.id, 'name': amenity_by_id.name}
 
-    @api.expect(amenity_model)
-    @api.response(200, 'Amenity updated successfully')
-    @api.response(404, 'Amenity not found')
-    @api.response(400, 'Invalid input data')
-    def put(self, amenity_id):
-         current_user = get_jwt_identity()
-        if not current_user.get('is_admin'):
-            return {'error': 'Admin privileges required'}, 403
-        else:
-            amenity_data = api.payload
-            facade.update_amenity(amenity_id, amenity_data)
-            updated_amenity = facade.get_amenity(amenity_id)
-            return {'id': updated_amenity.id, 'name': updated_amenity.name}
+@api.expect(amenity_model)
+@api.response(200, 'Amenity updated successfully')
+@api.response(404, 'Amenity not found')
+@api.response(400, 'Invalid input data')
+def put(self, amenity_id):
+    current_user = get_jwt_identity()
+    if not current_user['is_admin']:
+        return {'error': 'Admin privileges required'}, 403
+    else:
+        amenity_data = api.payload
+        facade.update_amenity(amenity_id, amenity_data)
+        updated_amenity = facade.get_amenity(amenity_id)
+        return {'id': updated_amenity.id, 'name': updated_amenity.name}
