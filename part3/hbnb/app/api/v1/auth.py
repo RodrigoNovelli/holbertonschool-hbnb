@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from app.services import facade
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity  # Import jwt_required and get_jwt_identity
 from app.services import facade
 
