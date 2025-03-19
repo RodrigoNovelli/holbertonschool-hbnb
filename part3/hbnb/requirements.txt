@@ -1,4 +1,4 @@
 flask
 flask-restx
-pip install flask-bcrypt
+flask-bcrypt
 flask-jwt-extended
