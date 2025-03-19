@@ -1,3 +1,4 @@
+from app import bcrypt
 from app.models.base import BaseModel
 import re
 
