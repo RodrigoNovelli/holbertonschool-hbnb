@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from app.models.user import User
 from app.services import facade
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 api = Namespace('users', description='User operations')
 
@@ -18,7 +19,30 @@ user_response_model = api.model('UserResponse',{
     'email': fields.String(required=True, description='Email of the user'),
     })
 
+@api.route('/users/')
+class AdminUserCreate(Resource):
+    @jwt_required()
+    def post(self):
+        current_user = get_jwt_identity()
+        if not current_user.get('is_admin'):
+            return {'error': 'Admin privileges required'}, 403
 
+        user_data = api.payload
+        current_user = get_jwt_identity()
+        email = user_data.get('email')
+
+        if current_user.get('is_admin'):
+            if facade.get_user_by_email(email):
+                return {'error': 'Email already registered'}, 400
+            
+            try:
+                new_user = facade.create_user(user_data)
+                return {'id': new_user.id, 'messagge': 'User succesfully created'}, 201
+            except ValueError as e:
+                return {'error': str(e)}, 400
+                
+        return {'error': 'Admin privileges required'}, 403
+    
 @api.route('/')
 class UserList(Resource):
     @api.expect(user_model, validate=True)
@@ -74,7 +98,7 @@ class UserResource(Resource):
             return {'error': 'Cannot modify password'}, 400
     
         correct_data = {
-            "first_name": user_data.get("first_name")
+            "first_name": user_data.get("first_name"),
             "last_name": user_data.get("last_name")
         }
     
