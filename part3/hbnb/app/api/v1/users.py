@@ -63,3 +63,9 @@ def put(self, user_id):
     
     current_user = get_jwt_identity()
     
+    if current_user['id'] == user['id']:
+        if user_data['email'] or user_data['password']:
+            return {'error': "You cannot modify email or password."}, 403
+        else:
+            facade.update_user(user_id, user_data)
+            return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200

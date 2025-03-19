@@ -27,6 +27,10 @@ class HBnBFacade:
     def get_user_by_email(self, email):
         return self.user_repo.get_by_attribute('email', email)
     
+    def update_user(self, user_id, user_data):
+        update = self.user_repo.update(user_id, user_data)
+        return update
+    
     def create_amenity(self, amenity_data):
         amenity_name = amenity_data.get('name')
         new_amenity = Amenity(amenity_name)
