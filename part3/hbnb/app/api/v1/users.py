@@ -1,4 +1,5 @@
 from flask_restx import Namespace, Resource, fields
+from app.models.user import User
 from app.services import facade
 
 api = Namespace('users', description='User operations')
@@ -47,25 +48,65 @@ class UserResource(Resource):
         if not user:
             return {'error': 'User not found'}, 404
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
+
+    @jwt_required()
+    @api.expect(user_response_model)
+    @api.response(200, 'User updated successfully', user_model)
+    @api.response(404, 'User not found')
+    @api.response(400, 'Invalid input data')
+    def put (self, user_id, user_data):
+        user_data = api.payload
     
-@api.route('/api/v1/users/<user_id>)')
-@api.expect(user_model)
-@api.response(200, 'User updated successfully')
-@api.response(404, 'User not found')
-@api.response(400, 'Invalid input data')
-@jwt_required()
-def put(self, user_id):
-    user_data = api.payload
-    user = facade.get_user(user_id)
+        user = facade.get_user(user_id)
     
-    if not user:
-        return {'error': 'User not found'}, 404
+        if not user:
+            return {'error': 'User not found'}, 404
     
-    current_user = get_jwt_identity()
+        current_user = get_jwt_identity()
     
-    if current_user['id'] == user['id']:
-        if user_data['email'] or user_data['password']:
-            return {'error': "You cannot modify email or password."}, 403
-        else:
+        if current_user['id'] != user.id:
+            return {'error': 'Denied access'}, 400
+    
+        if "email" in user_data:
+            return {'error': 'Cannot modify email'}, 400
+    
+        if "password" in user_data:
+            return {'error': 'Cannot modify password'}, 400
+    
+        correct_data = {
+            "first_name": user_data.get("first_name")
+            "last_name": user_data.get("last_name")
+        }
+    
+        facada.update_user(user_id, correct_data)
+        return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
+
+    @api.route('/users/<user_id>')
+    class AdminUserResource(Resource):
+        @jwt_required()
+        def put(self, user_id):
+            current_user = get_jwt_identity()
+        
+            # If 'is_admin' is part of the identity payload
+            if not current_user.get('is_admin'):
+                return {'error': 'Admin privileges required'}, 403
+
+            data = request.json
+            email = data.get('email')
+
+            if email:
+                # Check if email is already in use
+                existing_user = facade.get_user_by_email(email)
+                if existing_user and existing_user.id != user_id:
+                    return {'error': 'Email is already in use'}, 400
+            
+            user_data['email'] = email
+            
+            password = user_data.get('password')
+            
+            if password:
+                new_password = user.hash_password(password)
+                user_data['password'] = new_password
+            
             facade.update_user(user_id, user_data)
             return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
