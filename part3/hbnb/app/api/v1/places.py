@@ -151,5 +151,19 @@ class PlaceResource(Resource):
             else:
                 facade.update_place(place_id, place_data)
                 return {"message": "Place updated successfully"}, 200
-        
+
+    @api.response(200, 'Place deleted successfully')
+    @api.response(404, 'Place not found')
+    @jwt_required()
+    def delete(self, place_id):
+        place = facade.get_place(place_id)
+        if not place:
+            return {'error': 'Place not found'}
+        current_user = get_jwt_identity()
+        is_admin = current_user.get('is_admin')
+        if is_admin or current_user['id'] == place['user_id']:
+            facade.delete_place(place_id)
+            return {'message': 'Place deleted succesfully'}, 201
+        return {'error': 'Permission denied'}, 403
+
         
