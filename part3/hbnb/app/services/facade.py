@@ -65,6 +65,9 @@ class HBnBFacade:
         update_p = self.place_repo.update(place_id, place_data)
         return update_p
     
+    def delete_place(self, place_id):
+        self.place_repo.delete(place_id)
+    
     def create_review(self, review_data):
         review = Review(**review_data)
         self.review_repo.add(review)
