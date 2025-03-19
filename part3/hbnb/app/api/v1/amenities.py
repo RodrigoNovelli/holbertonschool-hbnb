@@ -46,7 +46,7 @@ class AmenityResource(Resource):
     @api.response(404, 'Amenity not found')
     @api.response(400, 'Invalid input data')
     def put(self, amenity_id):
-         current_user = get_jwt_identity()
+        current_user = get_jwt_identity()
         if not current_user.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
         else:
