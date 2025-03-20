@@ -1,4 +1,3 @@
-
 from app.models.base import BaseModel
 import re
 
@@ -10,7 +9,7 @@ class User(BaseModel):
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
-        self.password = password
+        self.hash_password(password)
 
     @property
     def first_name(self):
@@ -58,12 +57,16 @@ class User(BaseModel):
         self.places.append(places)
         places._owner = self
     
+    @property
+    def password(self):
+        raise AttributeError('Password is not readable')
+
     def hash_password(self, password):
         """Hashes the password before storing it."""
         from app import bcrypt
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        self._password = bcrypt.generate_password_hash(password).decode('utf-8')
     
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
         from app import bcrypt
-        return bcrypt.check_password_hash(self.password, password)
+        return bcrypt.check_password_hash(self._password, password)
