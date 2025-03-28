@@ -27,7 +27,7 @@ class ReviewList(Resource):
             return {'error': 'You have already reviewed this place'}, 400
         else:
             reviews = facade.get_reviews_by_place(review_data['place_id'])
-            if any(current_user for review.user_id in reviews):
+            if any(current_user for reviews.user_id in reviews):
                 return {'error': 'You have already reviewed this place'}, 400
             else:
                 new_review = facade.create_review(review_data)
@@ -74,14 +74,13 @@ class ReviewResource(Resource):
             'place_id': {'type': 'string'}
             }
         review_data = api.payload
-        validate = Validate(scheme)
-        review = fecade.get_place(review.id)
+        review = facade.get_place(review.id)
         
         if current_user['id'] == review['user_id']:
             if not review:
-                return {'error' ('Review not found')}, 404
+                return {'error': 'Review not found'}, 404
             else:
-                fecade.update_review(review_id, review_data)
+                facade.update_review(review_id, review_data)
                 return {'message': 'Review updated succesfully'}, 201
         else:
             return {'error': "Unauthorized action."}, 403

@@ -52,12 +52,11 @@ class UserList(Resource):
     def post(self):
         """Register a new user"""
         user_data = api.payload
-
+        print('user data is {}'.format(user_data['email']))
         # Simulate email uniqueness check (to be replaced by real validation with persistence)
         existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
-
         new_user = facade.create_user(user_data)
         return {'id': new_user.id, 'first_name': new_user.first_name, 'last_name': new_user.last_name, 'email': new_user.email, 'password': new_user.password}, 201
     
@@ -102,7 +101,7 @@ class UserResource(Resource):
             "last_name": user_data.get("last_name")
         }
     
-        facada.update_user(user_id, correct_data)
+        facade.update_user(user_id, correct_data)
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
 
     @api.route('/users/<user_id>')

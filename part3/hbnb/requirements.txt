@@ -5,3 +5,5 @@ flask-jwt-extended
 pytest
 requests
 flask-HTTPAuth
+sqlalchemy
+flask-sqlalchemy
