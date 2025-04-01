@@ -1,9 +1,13 @@
 from app.models.base import BaseModel
 from app.models.user import User
 from app.models.place import Place
+from app import db
 
 
-class Review(BaseModel):
+class Review(BaseModel, db.model):
+    __tablename__ = 'review'
+    text = db.Column(db.String(125), nullable=False)
+    rating = db.Column(db.Integer, nullanle=False)
     def __init__(self, text, rating, place_id, user_id):
         super().__init__()
         self.text = text

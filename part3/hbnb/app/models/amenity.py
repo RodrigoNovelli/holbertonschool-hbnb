@@ -1,7 +1,9 @@
 from app.models.base import BaseModel
+from app import db
 
-
-class Amenity(BaseModel):
+class Amenity(BaseModel, db.Model):
+    __tablename__ = 'amenity'
+    name = db.Column(db.String(50), nullable=False)
     def __init__(self, name):
         super().__init__()
         self.name = name

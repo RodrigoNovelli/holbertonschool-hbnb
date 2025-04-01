@@ -1,9 +1,17 @@
 from app.models.base import BaseModel
 from app.models.amenity import Amenity
 from app.models.user import User
+from app import db
 
 
-class Place(BaseModel):
+class Place(BaseModel, db.Model):
+    __tablename__ = 'places'
+    tile = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(128), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    
     def __init__(self, title, description, price, latitude, longitude, owner, owner_id, amenities):
         super().__init__()
         self.title = title
