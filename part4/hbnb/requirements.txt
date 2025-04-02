@@ -1,9 +1,0 @@
-flask
-flask-restx
-flask-bcrypt
-flask-jwt-extended
-pytest
-requests
-flask-HTTPAuth
-sqlalchemy
-flask-sqlalchemy
