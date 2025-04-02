@@ -1,5 +1,6 @@
 from app.models.base import BaseModel
 from app import db
+from sqlalchemy.orm import validates
 
 class Amenity(BaseModel, db.Model):
     __tablename__ = 'amenity'
@@ -7,14 +8,10 @@ class Amenity(BaseModel, db.Model):
     def __init__(self, name):
         super().__init__()
         self.name = name
-    
-    @property
-    def name(self):
-        return self._name
-    
-    @name.setter
-    def name(self, string):
-        if len(string) <= 50 and isinstance(string, str):
-            self._name = string
+
+    @validates("name")
+    def validates_name(self, key, string):
+        if len(string) <= 50:
+            self.name = string
         else:
-            raise ValueError('Name must be a string between 0 and 50 char')
+            raise ValueError('Name is too long')
