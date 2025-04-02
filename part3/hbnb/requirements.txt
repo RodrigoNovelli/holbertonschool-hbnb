@@ -6,4 +6,4 @@ pytest
 requests
 flask-HTTPAuth
 sqlalchemy
-flask-sqlalchemy
+flask-SQLAlchemy
