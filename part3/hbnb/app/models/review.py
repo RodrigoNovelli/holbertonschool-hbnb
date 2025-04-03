@@ -37,5 +37,3 @@ class Review(BaseModel, db.Model):
             self._rating = num
         else:
             raise ValueError('Rating mus be a number between 1 and 5')
-    
-    

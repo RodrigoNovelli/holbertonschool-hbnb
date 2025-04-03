@@ -18,6 +18,7 @@ class ReviewList(Resource):
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     def post(self):
         current_user = get_jwt_identity()
@@ -62,6 +63,7 @@ class ReviewResource(Resource):
     @api.response(200, 'Review updated successfully')
     @api.response(404, 'Review not found')
     @api.response(400, 'Invalid input data')
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     def put(self, review_id):
         current_user = get_jwt_identity()
@@ -87,9 +89,11 @@ class ReviewResource(Resource):
 
     @api.response(200, 'Review deleted successfully')
     @api.response(404, 'Review not found')
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     def delete(self, review_id):
         current_user = get_jwt_identity()
+        review = facade.get_review(review_id)
         """Delete a review"""
         if current_user['id'] == review['user_id']:
             facade.delete_review(review_id)

@@ -47,6 +47,7 @@ place_response_model = api.model('PlaceResponse',
 
 @api.route('/')
 class PlaceList(Resource):
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     @api.expect(place_model)
     @api.response(201, 'Place successfully created', place_response_model)
@@ -127,6 +128,7 @@ class PlaceResource(Resource):
     @api.response(200, 'Place updated successfully')
     @api.response(404, 'Place not found')
     @api.response(400, 'Invalid input data')
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     def put(self, place_id):
         """Update a place's information"""
@@ -153,6 +155,7 @@ class PlaceResource(Resource):
 
     @api.response(200, 'Place deleted successfully')
     @api.response(404, 'Place not found')
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     def delete(self, place_id):
         place = facade.get_place(place_id)

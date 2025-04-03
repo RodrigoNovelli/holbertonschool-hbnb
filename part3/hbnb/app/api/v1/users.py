@@ -25,6 +25,7 @@ user_response_model = api.model('UserResponse',{
 
 @api.route('/users/')
 class AdminUserCreate(Resource):
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     def post(self):
         current_user = get_jwt_identity()
@@ -78,6 +79,7 @@ class UserResource(Resource):
             return {'error': 'User not found'}, 404
         return {'id': user.id, 'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email}, 200
 
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     @api.expect(user_response_model)
     @api.response(200, 'User updated successfully', user_model)
@@ -112,6 +114,7 @@ class UserResource(Resource):
 
     @api.route('/users/<user_id>')
     class AdminUserResource(Resource):
+        @api.doc(security='Bearer Auth')
         @jwt_required()
         def put(self, user_id):
             user_data = api.payload

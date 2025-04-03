@@ -13,6 +13,7 @@ class AmenityList(Resource):
     @api.expect(amenity_model)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
+    @api.doc(security='Bearer Auth')
     @jwt_required()
     def post(self):
         current_user = get_jwt_identity()
@@ -45,6 +46,8 @@ class AmenityResource(Resource):
 @api.response(200, 'Amenity updated successfully')
 @api.response(404, 'Amenity not found')
 @api.response(400, 'Invalid input data')
+@api.doc(security='Bearer Auth')
+@jwt_required()
 def put(self, amenity_id):
     current_user = get_jwt_identity()
     if not current_user.get('is_admin'):
