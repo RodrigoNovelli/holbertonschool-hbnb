@@ -114,23 +114,26 @@ class UserResource(Resource):
     class AdminUserResource(Resource):
         @jwt_required()
         def put(self, user_id):
+            user_data = api.payload
+            user = facade.get_user(user_id)
+
+            if not user:
+                return{'error': 'User not found'}, 404
+            
             current_user = get_jwt_identity()
-        
             # If 'is_admin' is part of the identity payload
             if not current_user.get('is_admin'):
                 return {'error': 'Admin privileges required'}, 403
-
-            data = request.json
-            email = data.get('email')
+            
+            email = user_data.get('email')
 
             if email:
                 # Check if email is already in use
                 existing_user = facade.get_user_by_email(email)
                 if existing_user and existing_user.id != user_id:
                     return {'error': 'Email is already in use'}, 400
-            
+                
             user_data['email'] = email
-            
             password = user_data.get('password')
             
             if password:
