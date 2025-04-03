@@ -2,7 +2,6 @@ from app.models.base import BaseModel
 from app.models.amenity import Amenity
 from app.models.user import User
 from app import db
-from sqlalchemy.orm import validates, relationsip
 
 
 class Place(BaseModel, db.Model):
@@ -27,39 +26,59 @@ class Place(BaseModel, db.Model):
             self.amenities = []  # List to store related amenities
         else:
             self.amenities = amenities
-
-    @validates("title")
-    def validates_nametitle(self, key, string):
-        if len(string) <= 100:
-            self.title = string
-        else:
-            raise ValueError('Title is too long')
     
-    @validates("description")
-    def validates_description(self, key, string):
+    @property
+    def title(self):
+        return self._title
+    
+    @title.setter
+    def title(self, string):
+        if len(string) <= 100 and isinstance(string, str):
+            self._title = string
+        else:
+            raise ValueError('Title must be a string under 100 char')
+    
+    @property
+    def description(self):
+        return self._description
+    
+    @description.setter
+    def description(self, string):
         if isinstance(string, str):
-            self.description = string
+            self._description = string
         else:
             raise ValueError('Description must be a string')
 
-    @validates("price")
-    def validates_price(self, key,  value):
-        if not isinstance(value, float):
-            self.price = value
+    @property
+    def price(self):
+        return self._price
+    
+    @price.setter
+    def price(self, num):
+        if num > 0 and isinstance(num, float):
+            self._price = num
         else:
             raise ValueError('Price must be a positive float')
     
-    @validates("latitude")
-    def validates_latitude(self, key, num):
+    @property
+    def latitude(self):
+        return self._latitude
+    
+    @latitude.setter
+    def latitude(self, num):
         if num <= 90.0 and num >= -90.0 and isinstance(num, float):
-            self.latitude = num
+            self._latitude = num
         else:
             raise ValueError('Latitude must be between -90.0 and 90.0')
-        
-    @validates("longitude")
-    def validates_longitude(self, key, num):
+    
+    @property
+    def longitude(self):
+        return self._longitude
+    
+    @longitude.setter
+    def longitude(self, num):
         if num >= -180.0 and num <= 180.0 and isinstance(num, float):
-            self.longitude = num
+            self._longitude = num
         else:
             raise ValueError('Longitude must be between -180.0 and 180.0')
     
