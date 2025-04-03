@@ -1,7 +1,10 @@
 from app import db
 from app.models.base import BaseModel
 import re
+from sqlalchemy.orm import validates
+from flask_bcrypt import Bcrypt
 
+bcrypt = Bcrypt()
 
 class User(BaseModel, db.Model):
     __tablename__ = 'users'
@@ -9,7 +12,7 @@ class User(BaseModel, db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
-    _password_hash = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
     def __init__(self, first_name, last_name, email, password, is_admin=False):
@@ -18,35 +21,23 @@ class User(BaseModel, db.Model):
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
-        self.password = password
+        self.password = self.hash_password(password)
 
-    @property
-    def first_name(self):
-        return self._first_name
-
-    @first_name.setter
-    def first_name(self, string):
+    @validates("first_name")
+    def validates_first_name(self, key, string):
         if len(string) <= 50 and isinstance(string, str):
-            self._first_name = string
+            return string
         else:
             raise ValueError("""
                              First name must be a string and be under 50 char
                              """)
 
-    @property
-    def last_name(self):
-        return self._last_name
-
-    @last_name.setter
-    def last_name(self, string):
+    @validates("last_name")
+    def validates_last_name(self, key, string):
         if len(string) <= 50 and isinstance(string, str):
-            self._last_name = string
+            return string
         else:
             raise ValueError('Last name must be a string and be under 50 char')
-
-    @property
-    def email(self):
-        return self._email
 
     def validate_email(self, email):
         validator = r'^[a-zA-z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -55,28 +46,22 @@ class User(BaseModel, db.Model):
         else:
             return False
 
-    @email.setter
-    def email(self, string):
+    @validates("email")
+    def validates_email(self, key, string):
         if self.validate_email(string) is True:
-            self._email = string
+            return string
         else:
             raise ValueError('Invalid email')
 
     def add_places(self, places):
         self.places.append(places)
-        places._owner = self
+        places.owner = self
 
-    @property
-    def password(self):
-        raise AttributeError('Password is not readable')
-
-    @password.setter
-    def password(self, password):
+    @validates("password")
+    def hash_password(self, key, password):
         """Hashes the password before storing it."""
-        from app import bcrypt
-        self._password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        return bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
         """Verifies if the provided password matches the hashed password."""
-        from app import bcrypt
-        return bcrypt.check_password_hash(self._password_hash, password)
+        return bcrypt.check_password_hash(self.password, password)
