@@ -139,7 +139,6 @@ class PlaceResource(Resource):
             'owner_id': {'type': 'string'}
             }
         
-        val = Validator(scheme)
         place_data = api.payload
         place = facade.get_place(place_id)
         current_user = get_jwt_identity()
