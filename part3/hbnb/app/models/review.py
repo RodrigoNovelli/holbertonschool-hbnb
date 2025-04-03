@@ -2,20 +2,13 @@ from app.models.base import BaseModel
 from app.models.user import User
 from app.models.place import Place
 from app import db
-from sqlalchemy.orm import validates, relationship
-from sqlalchemy import Table, Column, Integer, ForeignKey
 
 
-class Review(BaseModel):
+class Review(BaseModel, db.Model):
     __tablename__ = 'review'
 
     text = db.Column(db.String(125), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    place_id = Column(Integer, ForeignKey('place.id'), nullable=False)
-    user = relationship('User', back_populates='reviews')
-    place = relationship('Place', back_populates='reviews')
-
     def __init__(self, text, rating, place_id, user_id):
         super().__init__()
         self.text = text
@@ -23,19 +16,25 @@ class Review(BaseModel):
         self.place_id = place_id
         self.user_id = user_id
     
+    @property
+    def text(self):
+        return self._text
     
-    @validates("text")
-    def validate_text(self, key, string):
+    @text.setter
+    def text(self, string):
         if isinstance(string, str):
-            return string
+            self._text = string
         else:
             raise ValueError("Text must be a string")
     
+    @property
+    def rating(self):
+        return self._rating
     
-    @validates("rating")
-    def validate_rating(self, key, num):
+    @rating.setter
+    def rating(self, num):
         if num <= 5 and num >= 1 and isinstance(num, int):
-            return num
+            self._rating = num
         else:
             raise ValueError('Rating mus be a number between 1 and 5')
     
