@@ -11,13 +11,21 @@ bcrypt = Bcrypt()
 jwt = JWTManager()
 db = SQLAlchemy()
 
+authorizations = {
+    'Bearer Auth': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }
+}
+
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
     app.config.from_object(config_class)
     bcrypt.init_app(app)
     jwt.init_app(app)
     db.init_app(app)
-    api = Api(app, version='2.0', title='HBnB API', description='HBnB Application API')
+    api = Api(app, version='2.0', title='HBnB API', description='HBnB Application API', authorizations=authorizations, security='Bearer Auth')
 
     from app.api.v1.users import api as users_ns
     from app.api.v1.amenities import api as amenity_ns
