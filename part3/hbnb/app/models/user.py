@@ -21,7 +21,7 @@ class User(BaseModel, db.Model):
         self.last_name = last_name
         self.email = email
         self.is_admin = is_admin
-        self.password = self.hash_password(password)
+        self.password = password
 
     @validates("first_name")
     def validates_first_name(self, key, string):
